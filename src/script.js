@@ -4,6 +4,12 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonControls.js';
 import { FlyControls } from 'three/examples/jsm/controls/FlyControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
+import { GlitchPass } from 'three/examples/jsm/postprocessing/GlitchPass.js';
+import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass.js';
+
 
 /**
  * Base
@@ -110,6 +116,17 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
+const composer = new EffectComposer(renderer);
+
+const renderPass = new RenderPass(scene, camera);
+composer.addPass(renderPass);
+
+// const glitchPass = new GlitchPass();
+// composer.addPass(glitchPass);
+
+const unrealBloomPass = new UnrealBloomPass();
+composer.addPass(unrealBloomPass);
+
 /**
  * Animate
  */
@@ -133,7 +150,7 @@ const tick = () =>
     directionalLight.position.y += 1;
 
     // Render
-    renderer.render(scene, camera)
+    composer.render()
 
     // Call tick again on the next frame
     window.requestAnimationFrame(tick);
