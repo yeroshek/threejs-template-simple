@@ -62,6 +62,19 @@ const cube = new THREE.Mesh(
 )
 scene.add(cube)
 
+for (let i = 0; i < 500; i++) {
+    let particle = new THREE.Mesh(
+        new THREE.BoxGeometry(0.03, 0.03, 0.03),
+        new THREE.MeshBasicMaterial({ color: 0xff0000 })
+    )
+
+    particle.position.x = Math.random() * 20 - 10;
+    particle.position.y = Math.random() * 20 - 10;
+    particle.position.z = Math.random() * 20 - 10;
+
+    scene.add(particle);
+}
+
 /**
  * Lighting
  */
