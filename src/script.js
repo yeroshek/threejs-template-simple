@@ -1,6 +1,8 @@
 import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonControls.js';
+import { FlyControls } from 'three/examples/jsm/controls/FlyControls.js';
 
 /**
  * Base
@@ -10,6 +12,8 @@ const canvas = document.querySelector('canvas.webgl')
 
 // Scene
 const scene = new THREE.Scene()
+scene.background = new THREE.Color( 0xffffff );
+scene.fog = new THREE.Fog( 0xffffff, 0, 2000 );
 
 /**
  * Sizes
@@ -45,17 +49,33 @@ camera.position.z = 1
 scene.add(camera)
 
 // Controls
-const controls = new OrbitControls(camera, canvas)
-controls.enableDamping = true
+const controls = new FlyControls(camera, canvas)
+controls.rollSpeed = 0.2;
+controls.dragToLook = true;
 
 /**
  * Cube
  */
 const cube = new THREE.Mesh(
     new THREE.BoxGeometry(1, 1, 1),
-    new THREE.MeshBasicMaterial({ color: 0xff0000 })
+    new THREE.MeshLambertMaterial({ color: 0xff0000 })
 )
 scene.add(cube)
+
+/**
+ * Lighting
+ */
+
+const ambientLight = new THREE.AmbientLight(0x404040);
+scene.add(ambientLight);
+
+const directionalLight = new THREE.DirectionalLight(0xffff00, 1);
+directionalLight.castShadow = true;
+directionalLight.position.z = 5;
+directionalLight.position.x = 2;
+directionalLight.position.y = 3;
+scene.add(directionalLight);
+
 
 /**
  * Renderer
@@ -80,7 +100,7 @@ const tick = () =>
     lastElapsedTime = elapsedTime
 
     // Update controls
-    controls.update()
+    controls.update(deltaTime)
 
     // Render
     renderer.render(scene, camera)
