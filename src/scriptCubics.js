@@ -42,37 +42,28 @@ window.addEventListener('resize', () =>
 // Base camera
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
 camera.position.x = 1
-camera.position.y = 1
-camera.position.z = 6
+camera.position.y = 2
+camera.position.z = 8
 scene.add(camera)
 
 // Controls
 const controls = new OrbitControls(camera, canvas)
 controls.rollSpeed = 0.2;
 controls.dragToLook = true;
+controls.minPolarAngle = Math.PI * .2;
+controls.maxPolarAngle = Math.PI * .49;
+controls.minDistance = 6;
+controls.maxDistance = 20;
 controls.autoRotate = true;
 
 
 const loader = new GLTFLoader();
-const textureLoader= new THREE.TextureLoader();
-const texture = textureLoader.load("./Cube.png");
-texture.encoding = THREE.sRGBEncoding;
-texture.flipY = false;
 
-loader.load('./cube.glb', (cube) => {
-    const mesh = cube.scene;
-
-    mesh.traverse((object) => {
-        if (object.isMesh) {
-            object.material.map = texture;
-            object.material.metalness = 0;
-        }
-    });
-
-    scene.add(mesh);
+loader.load('./cubics.gltf', (cubics) => {
+    scene.add(cubics.scene);
 })
 
-const ambientLight = new THREE.AmbientLight(0xffffff);
+const ambientLight = new THREE.AmbientLight(0x404040);
 scene.add(ambientLight);
 
 /**
